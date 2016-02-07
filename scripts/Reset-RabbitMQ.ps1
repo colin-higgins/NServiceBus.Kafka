@@ -1,0 +1,3 @@
+Kafkactl stop_app
+Kafkactl reset
+Kafkactl start_app
