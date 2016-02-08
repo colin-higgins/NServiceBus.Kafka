@@ -12,14 +12,13 @@
 
         public void CreateQueueIfNecessary(Address address, string account)
         {
-            //using (var connection = ConnectionManager.GetAdministrationConnection())
-            //using (var channel = connection.CreateModel())
-            //{
-            //    channel.QueueDeclare(address.Queue, Configure.DurableMessagesEnabled(), false, false, null);
+            using (var connection = ConnectionManager.GetAdministrationConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(address.Queue, Configure.DurableMessagesEnabled(), false, false, null);
 
-            //    RoutingTopology.Initialize(channel, address.Queue);
-            //}
-
+                RoutingTopology.Initialize(channel, address.Queue);
+            }
         }
     }
 }
