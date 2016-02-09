@@ -8,18 +8,10 @@
     using KafkaNet;
     using KafkaNet.Model;
     using KafkaNet.Protocol;
-    using NServiceBus.Serialization;
     using Routing;
 
-    public class SimpleTopology : IRoutingTopology
+    class SimpleTopology : IRoutingTopology
     {
-        private IMessageSerializer serializer;
-
-        public SimpleTopology(IMessageSerializer serializer)
-        {
-            this.serializer = serializer;
-        }
-
         public Task Initialize(object channel, string main)
         {
             throw new NotImplementedException();
@@ -35,18 +27,11 @@
             var options = new KafkaOptions(new Uri(address.Machine));
             var router = new BrokerRouter(options);
             var topic = address.Queue;
+            var messageString = System.Text.Encoding.Default.GetString(message.Body);
 
-            using (var stream = new MemoryStream())
+            using (var client = new Producer(router))
             {
-                serializer.Serialize(message, stream);
-
-                throw new NotImplementedException();
-                //var messageCalue = stream.Re
-
-                using (var client = new Producer(router))
-                {
-                    await client.SendMessageAsync(topic, new[] { new Message(null) });
-                }
+                await client.SendMessageAsync(topic, new[] { new Message(messageString) });
             }
         }
 
